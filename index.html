@@ -250,6 +250,123 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/11/2个纯html页面传值/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zkforever">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zkforever的地盘">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/11/2个纯html页面传值/" itemprop="url">2个纯html页面之间传值</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-11T14:19:44+08:00">
+                2017-06-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>1.indexMain.html 嵌套index.html;</p>
+<p><iframe name="child" id="child" src="aa.html" width="50%" height="50%"></iframe></p>
+<p><button onclick="myFunction()">点击这里</button><br>   function myFunction () {<br>        var child_1 = document.getElementById(‘child’);<br>        var win = child_1.contentWindow;<br>        win.postMessage(“你好，js”,’*’);<br>    }</p>
+<p>2.在index.html里<br> window.onmessage = function(e){<br>        e = e || event;<br>        alert(e.data);<br>    }</p>
+<p>3.点击’点击这里’，弹出：你好，js</p>
+<p>还有其他方式，参考：<a href="http://web.jobbole.com/88525/" target="_blank" rel="external">http://web.jobbole.com/88525/</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/15/诡异错误解决/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -628,7 +745,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
