@@ -318,9 +318,8 @@
       
         
           
-            <p>1.indexMain.html 嵌套index.html;</p>
-<p><iframe name="child" id="child" src="aa.html" width="50%" height="50%"></iframe></p>
-<p><button onclick="myFunction()">点击这里</button><br>   function myFunction () {<br>        var child_1 = document.getElementById(‘child’);<br>        var win = child_1.contentWindow;<br>        win.postMessage(“你好，js”,’*’);<br>    }</p>
+            <p>1.indexMain.html 嵌套index.html;<br>    <figure class="highlight plain"><figcaption><span>name="child" id="child" src="aa.html" width=50% height = 50%></span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;button onclick=&quot;myFunction()&quot;&gt;点击这里&lt;/button&gt;</div></pre></td></tr></table></figure></p>
+<p>   function myFunction () {<br>        var child_1 = document.getElementById(‘child’);<br>        var win = child_1.contentWindow;<br>        win.postMessage(“你好，js”,’*’);<br>    }</p>
 <p>2.在index.html里<br> window.onmessage = function(e){<br>        e = e || event;<br>        alert(e.data);<br>    }</p>
 <p>3.点击’点击这里’，弹出：你好，js</p>
 <p>还有其他方式，参考：<a href="http://web.jobbole.com/88525/" target="_blank" rel="external">http://web.jobbole.com/88525/</a></p>
