@@ -250,6 +250,122 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/01/02/untitled-1609588095741/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zkforever">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zkforever的地盘">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/01/02/untitled-1609588095741/" itemprop="url">iOS wkwebview 网站qq一键登录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-02T19:48:15+08:00">
+                2021-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>&emsp;&emsp;最近有个朋友问为何wkwebview第三方登录点击一键登录会提示qq版本过低，我的第一个反应是这个要装qq最新的sdk吧，然后研究发现，其实情况不是这么简单。<br>&emsp;&emsp;先说结论，<strong>不需要装sdk，不需要去qq互联注册，只需要安排好自己的wkwebview就好了。</strong><br>1.安排一个vc，里面加上wkwebview，navigationDelegate设置为vc，实现navigationDelegate的方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler &#123;</div><div class="line">    if ([navigationAction.request.URL.absoluteString hasPrefix:@&quot;wtloginmqq&quot;]) &#123;</div><div class="line">        NSString *urlStr = [NSString stringWithFormat:@&quot;%@&amp;schemacallback=bbb://&quot;,navigationAction.request.URL.absoluteString];</div><div class="line">        NSURL *url = [NSURL URLWithString:urlStr];</div><div class="line">        self.currentURLStr = [navigationAction.request.URL.absoluteString stringByReplacingOccurrencesOfString:@&quot;wtloginmqq://ptlogin/qlogin?p=&quot; withString:@&quot;&quot;];</div><div class="line">        [[UIApplication sharedApplication] openURL:url options:@&#123;&#125; completionHandler:^(BOOL success) &#123;</div><div class="line">            </div><div class="line">        &#125;];</div><div class="line">        decisionHandler(WKNavigationActionPolicyCancel);</div><div class="line">        return;</div><div class="line">    &#125;</div><div class="line">    decisionHandler(WKNavigationActionPolicyAllow);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里的bbb是当前应用的url schemes，可自定义，这里的&amp;schemacallback一个字母都不能改，不然会跳不回当前应用。这里的currentURLStr 是保存出去的URL的，在下面会用到。<br>在vc里实现一个方法，加载url的，为了登录跳回刷新webview做准备，还需要准备一个urldecode的方法，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">- (void)loadWithURL:(NSString*)url &#123;</div><div class="line">    NSString *decodeStr = [self decodeString:self.currentURLStr];</div><div class="line">    NSString *allURL = [NSString stringWithFormat:@&quot;%@%@&quot;,decodeStr,url];</div><div class="line">    NSURL *newUrl = [NSURL URLWithString:allURL];</div><div class="line">    [self.wkWebView loadRequest:[NSURLRequest requestWithURL:newUrl]];</div><div class="line">&#125;</div><div class="line"></div><div class="line">-(NSString *)decodeString:(NSString*)encodedString</div><div class="line"> </div><div class="line">&#123;</div><div class="line">    //NSString *decodedString = [encodedString stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding ];</div><div class="line"> </div><div class="line">    NSString *decodedString  = (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,</div><div class="line">                                                                                                                     (__bridge CFStringRef)encodedString,</div><div class="line">                                                                                                                     CFSTR(&quot;&quot;),</div><div class="line">                                                                                                                     CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));</div><div class="line">    return decodedString;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在appdelegate里实现跳转回来接入的代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary*)options&#123;</div><div class="line">    NSLog(@&quot;aaaa==%@&quot;,url);</div><div class="line">    NSString *str = [url.absoluteString stringByReplacingOccurrencesOfString:@&quot;bbb://(null)&quot; withString:@&quot;&quot;];</div><div class="line">    NSLog(@&quot;str==%@&quot;,url);</div><div class="line">    [[vc sharedInstance] loadWithURL:str];</div><div class="line">    return YES;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这里有坑的地方就是qq回来的会是bbb://(null)xxxx，你要用到的是xxxx，需要做一次替换，在跳转qq的时候也是要把wtloginmqq://ptlogin/qlogin?p=去掉，保留的2个字符串最后拼起来，才能完整完成qq登录，最后，vc可以单例，也可以不单例，只要能在appdelegate找到最开始的vc就行了，<br>做的时候记得设置自己的url scheme和qq的白名单。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/14/chats-Pod导入问题/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -857,7 +973,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -903,7 +1019,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
